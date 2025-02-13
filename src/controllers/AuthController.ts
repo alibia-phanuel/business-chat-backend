@@ -36,7 +36,6 @@ export const Login = async (
     next(error instanceof Error ? error : new Error(String(error)));
   }
 };
-
 export const Me = async (
   req: Request,
   res: Response,
@@ -44,7 +43,7 @@ export const Me = async (
 ): Promise<void> => {
   try {
     if (!req.session.userId) {
-      res.status(401).json({ msg: "Veuillez vous connecter à votre compte !" });
+      res.status(401).json({ msg: "" });
     }
     const user = await User.findOne({
       attributes: ["uuid", "name", "email", "role"],

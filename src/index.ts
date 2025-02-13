@@ -8,6 +8,7 @@ import SequelizeStore from "connect-session-sequelize";
 import homeRoutes from "./routes/homeRoutes";
 import UserRoute from "./routes/UserRoute";
 import AuthRoute from "./routes/AuthRoute";
+import ProductRoute from "./routes/ProductRoute";
 import errorHandler from "./middleware/errorHandler";
 dotenv.config(); // Charger les variables d'environnement dès le début
 const app = express();
@@ -62,6 +63,7 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 // Déclaration des routes
 app.use(AuthRoute); // Routes d'authentification d'abord
 app.use(UserRoute); // Routes utilisateur
+app.use(ProductRoute); // Routes Produits
 app.use("/", homeRoutes); // Route de la page d'accueil
 
 // Middleware global pour la gestion des erreurs (toujours à la fin)

@@ -1,10 +1,16 @@
 import Products from "../models/Product";
+import User from "../models/User";
 // Importation des types nécessaires depuis Express
 import { Request, Response, NextFunction } from "express";
+
 interface ProductRequestBody {
   name: string;
   price: number;
   userId: number;
+}
+interface UserProps extends Request {
+  role?: string;
+  userId?: string | number;
 }
 interface ProductParams {
   id: string;
@@ -17,15 +23,38 @@ interface ProductParams {
  */
 
 export const getProducts = async (
-  req: Request,
+  req: UserProps,
   res: Response,
   next: NextFunction
-): Promise<void> => {
+): Promise<any> => {
   try {
     // code
-  } catch (error) {
+    let response;
+    if (req.role === "admin") {
+      response = await Products.findAll({
+        include: [
+          {
+            model: User,
+          },
+        ],
+      });
+    } else {
+      response = await Products.findAll({
+        where: {
+          userId: req.userId,
+        },
+        include: [
+          {
+            model: User,
+          },
+        ],
+      });
+    }
+    res.status(200).json(response);
+  } catch (error: any) {
     // Transmission de l'erreur au middleware global
     next(error instanceof Error ? error : new Error(String(error)));
+    res.status(500).json({ msg: error.message });
   }
 };
 export const getProductById = async (
